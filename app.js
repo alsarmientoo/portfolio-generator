@@ -1,5 +1,9 @@
+// const fs = require('fs');
+
+// const generateSite = require('./utils/generate-site.js');
+const { writeFile, copyFile } = require('./utils/generate-site.js');
+
 const inquirer = require('inquirer');
-const fs = require('fs');
 
 const generatePage = require('./src/page-template.js');
 
@@ -144,11 +148,36 @@ promptUser()
     .then(promptProject)
 // .then(projectAnswers => console.log(projectAnswers));
     .then(portfolioData => {
-        const pageHTML = generatePage(portfolioData);
-
-        fs.writeFile('./index.html', pageHTML, err => {
-        if (err) throw error;
-
-        console.log('Page created! Checkout index.html in this directory to see it!');
-        });
+        return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse)
+    })
+    .catch(err => {
+        console.log(err);
     });
+
+        // fs.writeFile('./dist/index.html', pageHTML, err => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+
+        // console.log('Page created! Checkout index.html in this directory to see it!');
+
+        // fs.copyFile('./src/style.css', './dist/style.css', err => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+        //     console.log('Style sheet copied successfully!');
+        // });
+        // });
+    
